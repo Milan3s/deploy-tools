@@ -1,7 +1,7 @@
-# 🚀 Deploy Tools - Guía de Build y Ejecución
+# 🚀 Deploy Tools - Guía Completa de Build y Ejecución
 
-![Java](https://img.shields.io/badge/Java-21-orange?logo=java)
-![JavaFX](https://img.shields.io/badge/JavaFX-21-blue)
+![Java](https://img.shields.io/badge/Java-24-orange?logo=java)
+![JavaFX](https://img.shields.io/badge/JavaFX-24-blue)
 ![Maven](https://img.shields.io/badge/Maven-Build-red?logo=apachemaven)
 ![NetBeans](https://img.shields.io/badge/IDE-NetBeans-green)
 ![Git](https://img.shields.io/badge/Git-VersionControl-black?logo=git)
@@ -18,18 +18,28 @@ https://drive.google.com/drive/folders/1337WeN_O6zhZiIpocrbkbaEX32mn4xW5?usp=dri
 
 ## ⚙️ Requisitos
 
--   Java JDK 21
--   JavaFX 21.0.1
+-   Java JDK 24
+-   JavaFX 24.0.2
 -   NetBeans
 -   Maven
 
 ------------------------------------------------------------------------
 
-## 📁 Estructura recomendada
+## 📁 Estructura correcta (IMPORTANTE)
 
     C:\Program Files\Java\
-    ├── jdk-21
-    ├── javafx-sdk-21.0.1
+    ├── jdk-24
+    │   └── bin\javaw.exe
+    │
+    ├── javafx-sdk-24.0.2
+    │   └── lib\
+    │       ├── javafx.base.jar
+    │       ├── javafx.controls.jar
+    │       ├── javafx.fxml.jar
+    │       └── ...
+
+✔ La carpeta **lib** es obligatoria\
+✔ Dentro deben estar TODOS los `.jar` de JavaFX
 
 ------------------------------------------------------------------------
 
@@ -38,19 +48,15 @@ https://drive.google.com/drive/folders/1337WeN_O6zhZiIpocrbkbaEX32mn4xW5?usp=dri
 1.  File → Open Project\
 2.  Seleccionar el proyecto\
 3.  Click derecho → Properties\
-4.  Java Platform → seleccionar JDK 21
+4.  Java Platform → seleccionar JDK 24
 
 ------------------------------------------------------------------------
 
-## 🏗️ Compilar el proyecto (IMPORTANTE)
+## 🏗️ Compilar el proyecto
 
-Este proyecto necesita el plugin de Maven:
+Este proyecto necesita:
 
     maven-assembly-plugin
-
-✔ Es necesario para generar el JAR final con dependencias
-
-------------------------------------------------------------------------
 
 ### 🔨 Compilar
 
@@ -72,6 +78,14 @@ mvn clean package
 
 ### 🪟 Windows (.bat)
 
+#### 1️⃣ Crear archivo
+
+Crear un archivo llamado:
+
+    run.bat
+
+#### 2️⃣ Contenido
+
 ``` bat
 @echo off
 title Deploy Tools - Iniciando
@@ -81,13 +95,26 @@ echo   Iniciando Deploy Tools...
 echo ===============================
 echo.
 
-start "" "C:\Program Files\Java\jdk-21\bin\javaw.exe" ^
-  --module-path "C:\Program Files\Java\javafx-sdk-21.0.1\lib" ^
+REM ---- Lanzar la aplicación ----
+start "" "C:\Program Files\Java\jdk-24\bin\javaw.exe" ^
+  --module-path "C:\Program Files\Java\javafx-sdk-24.0.2\lib" ^
   --add-modules javafx.controls,javafx.fxml ^
   -jar "deploy-tools.jar"
 
 exit
 ```
+
+#### 3️⃣ Cómo ejecutarlo
+
+-   Doble click sobre `run.bat`
+-   O desde CMD:
+
+``` bash
+run.bat
+```
+
+✔ No se abre consola (usa `javaw`)\
+✔ Lanza directamente la aplicación
 
 ------------------------------------------------------------------------
 
@@ -101,8 +128,8 @@ echo "  Iniciando Deploy Tools..."
 echo "==============================="
 echo ""
 
-JAVA_HOME=/usr/lib/jvm/jdk-21
-JAVAFX_PATH=/opt/javafx-sdk-21.0.1/lib
+JAVA_HOME=/usr/lib/jvm/jdk-24
+JAVAFX_PATH=/opt/javafx-sdk-24.0.2/lib
 
 $JAVA_HOME/bin/java \
   --module-path "$JAVAFX_PATH" \
@@ -124,6 +151,34 @@ chmod +x run.sh
 
 ------------------------------------------------------------------------
 
+## 📌 Cómo colocar correctamente JavaFX
+
+1.  Descargar JavaFX\
+2.  Extraer carpeta:
+
+```{=html}
+<!-- -->
+```
+    javafx-sdk-24.0.2
+
+3.  Copiar en:
+
+```{=html}
+<!-- -->
+```
+    C:\Program Files\Java\
+
+4.  Verificar:
+
+```{=html}
+<!-- -->
+```
+    C:\Program Files\Java\javafx-sdk-24.0.2\lib
+
+✔ Dentro deben estar los `.jar`
+
+------------------------------------------------------------------------
+
 ## 🔐 Seguridad
 
 No subir:
@@ -140,14 +195,6 @@ No subir:
 git tag v1.0.0
 git push origin v1.0.0
 ```
-
-------------------------------------------------------------------------
-
-## 📌 Notas
-
--   Usar siempre Java 21
--   JavaFX debe coincidir con la versión instalada
--   El JAR generado es ejecutable directamente
 
 ------------------------------------------------------------------------
 
