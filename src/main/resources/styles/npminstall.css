@@ -1,0 +1,257 @@
+/* ------------------------------------------------
+   BASE
+------------------------------------------------ */
+
+.root {
+    -fx-background-color: #f8f9fc;
+}
+
+
+/* ------------------------------------------------
+   TITULO
+------------------------------------------------ */
+
+.titulo-principal {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+}
+
+
+/* ------------------------------------------------
+   DESCRIPCION
+------------------------------------------------ */
+
+.descripcion {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+}
+
+
+/* ------------------------------------------------
+   LABEL FORM
+------------------------------------------------ */
+
+.label-form {
+    -fx-text-fill: #2d2d2d;
+    -fx-font-size: 13px;
+}
+
+
+/* ------------------------------------------------
+   INPUT
+------------------------------------------------ */
+
+.input {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+
+    -fx-border-color: #d0d4dc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+
+    -fx-padding: 6 10 6 10;
+}
+
+.input:focused {
+    -fx-border-color: #3b82f6;
+}
+
+.input:disabled {
+    -fx-opacity: 0.6;
+}
+
+
+/* ------------------------------------------------
+   BOTONES BASE
+------------------------------------------------ */
+
+.button {
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+    -fx-padding: 6 14 6 14;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+
+/* ------------------------------------------------
+   BOTON SECUNDARIO (GRIS)
+------------------------------------------------ */
+
+.boton-secundario {
+    -fx-background-color: #e4e7ec;
+    -fx-text-fill: #1a1a1a;
+}
+
+.boton-secundario:hover {
+    -fx-background-color: #d6dae2;
+}
+
+.boton-secundario:pressed {
+    -fx-background-color: #c9ced8;
+}
+
+
+/* ------------------------------------------------
+   BOTON PRINCIPAL (AZUL)
+------------------------------------------------ */
+
+.boton-build {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+.boton-build:hover {
+    -fx-background-color: #5a9cff;
+}
+
+.boton-build:pressed {
+    -fx-background-color: #2563eb;
+}
+
+
+/* ------------------------------------------------
+   BOTON SUCCESS (GUARDAR)
+------------------------------------------------ */
+
+.boton-success {
+    -fx-background-color: #22c55e;
+    -fx-text-fill: white;
+}
+
+.boton-success:hover {
+    -fx-background-color: #4ade80;
+}
+
+.boton-success:pressed {
+    -fx-background-color: #16a34a;
+}
+
+
+/* ------------------------------------------------
+   BOTON WARNING (DESBLOQUEAR)
+------------------------------------------------ */
+
+.boton-warning {
+    -fx-background-color: #facc15;
+    -fx-text-fill: #1a1a1a;
+}
+
+.boton-warning:hover {
+    -fx-background-color: #fde047;
+}
+
+.boton-warning:pressed {
+    -fx-background-color: #eab308;
+}
+
+
+/* ------------------------------------------------
+   BOTON ERROR / DELETE
+------------------------------------------------ */
+
+.boton-danger {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+}
+
+.boton-danger:hover {
+    -fx-background-color: #ff5c5c;
+}
+
+.boton-danger:pressed {
+    -fx-background-color: #dc2626;
+}
+
+
+/* ------------------------------------------------
+   ESTADOS
+------------------------------------------------ */
+
+.label-estado-titulo {
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+}
+
+/* 🔵 INFO */
+
+.estado-warning {
+    -fx-text-fill: #3b82f6;
+}
+
+/* 🟢 OK */
+
+.estado-ok {
+    -fx-text-fill: #22c55e;
+}
+
+/* 🔴 ERROR */
+
+.estado-error {
+    -fx-text-fill: #ef4444;
+}
+
+
+/* ------------------------------------------------
+   SEPARADOR
+------------------------------------------------ */
+
+.separator .line {
+    -fx-border-color: #e2e6ee;
+    -fx-border-width: 1;
+}
+
+
+/* ------------------------------------------------
+   COMBOBOX
+------------------------------------------------ */
+
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+
+    -fx-border-color: #d0d4dc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+
+    -fx-padding: 2 4 2 4;
+}
+
+.combo-box:focused {
+    -fx-border-color: #3b82f6;
+}
+
+.combo-box:disabled {
+    -fx-opacity: 0.6;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #666666;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d0d4dc;
+}
+
+.combo-box-popup .list-cell {
+    -fx-text-fill: #000000;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #eef2f8;
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}

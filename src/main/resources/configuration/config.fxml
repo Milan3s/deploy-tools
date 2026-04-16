@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="configRoot" prefHeight="908.0" prefWidth="1187.0" styleClass="mainFxmlClass" stylesheets="@../styles/config.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="configuration.ConfigController">
+
+    <children>
+
+        <!-- HEADER -->
+        <Label layoutX="40" layoutY="20" styleClass="title-label" text="Configuration" />
+        <Separator layoutX="40" layoutY="60" prefWidth="1100" />
+
+        <!-- ============================= -->
+        <!-- CONFIG PATH -->
+        <!-- ============================= -->
+        <Label layoutX="40" layoutY="100" styleClass="label-title" text="Config Path" />
+
+        <TextField fx:id="configPathField" layoutX="40" layoutY="130" prefWidth="520" />
+        <Button layoutX="40" layoutY="170" onAction="#actionClearConfigField" prefWidth="120" text="Limpiar" />
+        <Button layoutX="180" layoutY="170" onAction="#actionBrowseConfig" prefWidth="110" text="Buscar" />
+        <Button fx:id="configSaveBtn" layoutX="300" layoutY="170" onAction="#actionSaveConfigPath" prefWidth="110" text="Guardar" />
+        <Button fx:id="configUnlockBtn" layoutX="420" layoutY="170" onAction="#actionUnlockConfig" prefWidth="140" styleClass="btn-success" text="Desbloquear" />
+
+        <Label fx:id="configStatusLabel" layoutX="40" layoutY="210" prefWidth="520" />
+
+        <!-- ============================= -->
+        <!-- PROJECTS -->
+        <!-- ============================= -->
+        <Label layoutX="40" layoutY="260" styleClass="label-title" text="Projects Path (Creación)" />
+
+        <TextField fx:id="projectsPathField" layoutX="40" layoutY="290" prefWidth="520" />
+        <Button layoutX="40" layoutY="330" onAction="#actionClearProjectsField" prefWidth="120" text="Limpiar" />
+        <Button layoutX="180" layoutY="330" onAction="#actionBrowseProjects" prefWidth="110" text="Buscar" />
+        <Button fx:id="projectsSaveBtn" layoutX="300" layoutY="330" onAction="#actionSaveProjectsPath" prefWidth="110" text="Guardar" />
+        <Button fx:id="projectsUnlockBtn" layoutX="420" layoutY="330" onAction="#actionUnlockProjects" prefWidth="140" styleClass="btn-success" text="Desbloquear" />
+
+        <Label fx:id="projectsStatusLabel" layoutX="40" layoutY="370" prefWidth="520" />
+
+        <!-- ============================= -->
+        <!-- BACKEND -->
+        <!-- ============================= -->
+        <Label layoutX="40" layoutY="420" styleClass="label-title" text="Backend Path (Ejecución)" />
+
+        <TextField fx:id="backendPathField" layoutX="40" layoutY="450" prefWidth="520" />
+        <Button layoutX="40" layoutY="490" onAction="#actionClearBackendField" prefWidth="120" text="Limpiar" />
+        <Button layoutX="180" layoutY="490" onAction="#actionBrowseBackend" prefWidth="110" text="Buscar" />
+        <Button fx:id="backendSaveBtn" layoutX="300" layoutY="490" onAction="#actionSaveBackendPath" prefWidth="110" text="Guardar" />
+        <Button fx:id="backendUnlockBtn" layoutX="420" layoutY="490" onAction="#actionUnlockBackend" prefWidth="140" styleClass="btn-success" text="Desbloquear" />
+
+        <Label fx:id="backendStatusLabel" layoutX="40" layoutY="530" prefWidth="520" />
+
+        <!-- ============================= -->
+        <!-- FRONTEND -->
+        <!-- ============================= -->
+        <Label layoutX="40" layoutY="580" styleClass="label-title" text="Frontend Path (Ejecución)" />
+
+        <TextField fx:id="frontendPathField" layoutX="40" layoutY="610" prefWidth="520" />
+        <Button layoutX="40" layoutY="650" onAction="#actionClearFrontendField" prefWidth="120" text="Limpiar" />
+        <Button layoutX="180" layoutY="650" onAction="#actionBrowseFrontend" prefWidth="110" text="Buscar" />
+        <Button fx:id="frontendSaveBtn" layoutX="300" layoutY="650" onAction="#actionSaveFrontendPath" prefWidth="110" text="Guardar" />
+        <Button fx:id="frontendUnlockBtn" layoutX="420" layoutY="650" onAction="#actionUnlockFrontend" prefWidth="140" styleClass="btn-success" text="Desbloquear" />
+
+        <Label fx:id="frontendStatusLabel" layoutX="40" layoutY="690" prefWidth="520" />
+
+        <!-- SEPARADOR VERTICAL -->
+        <Separator layoutX="599" layoutY="100" orientation="VERTICAL" prefHeight="667.0" prefWidth="8" />
+
+        <!-- ============================= -->
+        <!-- GIT -->
+        <!-- ============================= -->
+        <Label layoutX="640" layoutY="100" styleClass="label-title" text="Configuración Git" />
+
+        <Label layoutX="640" layoutY="140" text="Ruta repositorios" />
+        <TextField fx:id="gitPathField" layoutX="640" layoutY="165" prefHeight="31.0" prefWidth="520.0" />
+        <Button layoutX="640" layoutY="205" onAction="#actionClearGitPath" prefWidth="120" text="Limpiar" />
+        <Button layoutX="780" layoutY="205" onAction="#actionBrowseGit" prefWidth="110" text="Buscar" />
+        <Button fx:id="gitSaveBtn" layoutX="900" layoutY="205" onAction="#actionSaveGitPath" prefWidth="110" text="Guardar" />
+        <Button fx:id="gitUnlockBtn" layoutX="1020" layoutY="205" onAction="#actionUnlockGit" prefWidth="140" styleClass="btn-success" text="Desbloquear" />
+
+        <Label layoutX="640" layoutY="260" text="Usuario Git" />
+        <TextField fx:id="gitUserField" layoutX="640" layoutY="285" prefHeight="31.0" prefWidth="520.0" />
+        <Button layoutX="640" layoutY="325" onAction="#actionClearGitUser" prefWidth="120" text="Limpiar" />
+
+        <Label layoutX="640" layoutY="370" text="Email Git" />
+        <TextField fx:id="gitEmailField" layoutX="640" layoutY="395" prefHeight="31.0" prefWidth="520.0" />
+        <Button layoutX="640" layoutY="435" onAction="#actionClearGitEmail" prefWidth="120" text="Limpiar" />
+
+        <Button layoutX="640" layoutY="480" onAction="#actionInitGit" prefWidth="150" text="Inicializar Repo" />
+        <Button layoutX="800" layoutY="480" onAction="#actionSaveGitConfig" prefWidth="150" text="Guardar Config" />
+
+        <Label fx:id="gitStatusLabel" layoutX="640" layoutY="520" prefWidth="460" />
+
+        <!-- ================= FOOTER ================= -->
+
+        <!-- 🔥 Separator horizontal -->
+        <Separator layoutX="40.0" layoutY="826.0" prefHeight="2.0" prefWidth="1100" />
+
+        <!-- 🔥 Reset alineado izquierda -->
+        <Button layoutX="499.0" layoutY="774.0" onAction="#actionResetAll" prefHeight="43.0" prefWidth="200" styleClass="btn-danger" text="Reset completo" />
+
+        <!-- 🔥 Botón cerrar centrado -->
+        <Button layoutX="499.0" layoutY="844.0" onAction="#actionClose" prefHeight="43.0" prefWidth="200.0" text="Cerrar" />
+
+    </children>
+</AnchorPane>

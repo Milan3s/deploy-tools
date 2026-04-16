@@ -1,0 +1,332 @@
+/* =========================================================
+   ROOT
+========================================================= */
+
+.root {
+    -fx-background-color: #ffffff;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+.title-log {
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+.section-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.status-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+}
+
+.card-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.input {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-border-color: #dcdfe6;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 0 12 0 12;
+    -fx-font-size: 13px;
+}
+
+.input:focused {
+    -fx-border-color: #4dabf7;
+}
+
+.input:disabled {
+    -fx-opacity: 0.6;
+}
+
+
+/* =========================================================
+   BUTTON BASE
+========================================================= */
+
+.button {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 6 14 6 14;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+
+/* =========================================================
+   BUTTON VARIANTS
+========================================================= */
+
+/* NEUTRO */
+.button-primary {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-border-color: #dcdfe6;
+}
+
+.button-primary:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+.button-primary:pressed {
+    -fx-background-color: #ebebeb;
+}
+
+
+/* GUARDAR */
+.button-save {
+    -fx-background-color: #4dabf7;
+    -fx-text-fill: #ffffff;
+}
+
+.button-save:hover {
+    -fx-background-color: #74c0fc;
+}
+
+.button-save:pressed {
+    -fx-background-color: #339af0;
+}
+
+
+/* DESBLOQUEAR */
+.button-unlock {
+    -fx-background-color: #e6e8ef;
+    -fx-text-fill: #000000;
+}
+
+.button-unlock:hover {
+    -fx-background-color: #d8dbe5;
+}
+
+.button-unlock:pressed {
+    -fx-background-color: #cfd3dc;
+}
+
+
+/* ARRANCAR */
+.button-success {
+    -fx-background-color: #40c057;
+    -fx-text-fill: #ffffff;
+}
+
+.button-success:hover {
+    -fx-background-color: #69db7c;
+}
+
+.button-success:pressed {
+    -fx-background-color: #2f9e44;
+}
+
+
+/* PARAR */
+.button-danger {
+    -fx-background-color: #e03131;
+    -fx-text-fill: #ffffff;
+}
+
+.button-danger:hover {
+    -fx-background-color: #ff6b6b;
+}
+
+.button-danger:pressed {
+    -fx-background-color: #c92a2a;
+}
+
+
+/* SECUNDARIO */
+.button-secondary {
+    -fx-background-color: #e6e8ef;
+    -fx-text-fill: #000000;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #d8dbe5;
+}
+
+.button-secondary:pressed {
+    -fx-background-color: #cfd3dc;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e4e7ed;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14;
+}
+
+
+/* =========================================================
+   CONSOLE
+========================================================= */
+
+.console {
+    -fx-background-color: #f7f8fb;
+    -fx-border-color: #cfd3dc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #222222;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12px;
+}
+
+.console .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.console .thumb {
+    -fx-background-color: #c9ccd6;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 12 4 12;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+}
+
+/* DETENIDO */
+.status-off {
+    -fx-background-color: #f1f3f5;
+    -fx-text-fill: #666666;
+}
+
+/* EN EJECUCION */
+.status-running {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #1e7e34;
+}
+
+/* ERROR */
+.status-error {
+    -fx-background-color: #f8d7da;
+    -fx-text-fill: #a71d2a;
+}
+
+/* WARNING */
+.status-warning {
+    -fx-background-color: #fff3cd;
+    -fx-text-fill: #856404;
+}
+
+/* =========================================================
+   COMBOBOX
+========================================================= */
+
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdfe6;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 13px;
+    -fx-padding: 0 8 0 8;
+    -fx-cursor: hand;
+}
+
+/* TEXTO */
+.combo-box .list-cell {
+    -fx-text-fill: #000000;
+    -fx-padding: 4 8 4 8;
+}
+
+/* FOCUS */
+.combo-box:focused {
+    -fx-border-color: #4dabf7;
+}
+
+/* HOVER */
+.combo-box:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+/* BOTÓN FLECHA */
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+/* FLECHA */
+.combo-box .arrow {
+    -fx-background-color: #666666;
+}
+
+/* DROPDOWN */
+.combo-box-popup .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdfe6;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* ITEMS */
+.combo-box-popup .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #000000;
+    -fx-padding: 6 10 6 10;
+}
+
+/* HOVER ITEM */
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f1f3f5;
+}
+
+/* ITEM SELECCIONADO */
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #4dabf7;
+    -fx-text-fill: white;
+}
+
+/* VARIANTE AUTO */
+.combo-auto {
+    -fx-border-color: #dcdfe6;
+}
+
+/* EXPO (verde) */
+.combo-expo {
+    -fx-border-color: #40c057;
+}
+
+/* CLI (azul) */
+.combo-cli {
+    -fx-border-color: #4dabf7;
+}
