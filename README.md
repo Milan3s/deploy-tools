@@ -1,4 +1,4 @@
-# 🚀 Deploy Tools - Guía Completa de Build y Ejecución
+# 🚀 Deploy Tools - Guía de Build y Ejecución
 
 ![Java](https://img.shields.io/badge/Java-21-orange?logo=java)
 ![JavaFX](https://img.shields.io/badge/JavaFX-21-blue)
@@ -18,9 +18,10 @@ https://drive.google.com/drive/folders/1337WeN_O6zhZiIpocrbkbaEX32mn4xW5?usp=dri
 
 ## ⚙️ Requisitos
 
--   Java JDK 21 (IMPORTANTE)
+-   Java JDK 21
 -   JavaFX 21.0.1
--   Maven 3.9+
+-   NetBeans
+-   Maven
 
 ------------------------------------------------------------------------
 
@@ -35,21 +36,23 @@ https://drive.google.com/drive/folders/1337WeN_O6zhZiIpocrbkbaEX32mn4xW5?usp=dri
 ## 🧵 Importar en NetBeans
 
 1.  File → Open Project\
-2.  Seleccionar proyecto\
+2.  Seleccionar el proyecto\
 3.  Click derecho → Properties\
-4.  Java Platform → JDK 21
+4.  Java Platform → seleccionar JDK 21
 
 ------------------------------------------------------------------------
 
-## 🏗️ Build del proyecto (IMPORTANTE)
+## 🏗️ Compilar el proyecto (IMPORTANTE)
 
-Este proyecto usa:
+Este proyecto necesita el plugin de Maven:
 
--   ✅ `maven-assembly-plugin`
--   ✅ genera **FAT JAR automáticamente**
--   ✅ nombre final: `deploy-tools.jar`
+    maven-assembly-plugin
 
-### 🔨 Comando:
+✔ Es necesario para generar el JAR final con dependencias
+
+------------------------------------------------------------------------
+
+### 🔨 Compilar
 
 ``` bash
 mvn clean package
@@ -60,12 +63,6 @@ mvn clean package
 ## 📦 Resultado
 
     target/deploy-tools.jar
-
-✔ Este JAR ya incluye TODAS las dependencias:
-
--   JavaFX
--   Gson
--   JSON
 
 ------------------------------------------------------------------------
 
@@ -113,13 +110,13 @@ $JAVA_HOME/bin/java \
   -jar deploy-tools.jar
 ```
 
-### Permisos:
+### Permisos
 
 ``` bash
 chmod +x run.sh
 ```
 
-### Ejecutar:
+### Ejecutar
 
 ``` bash
 ./run.sh
@@ -127,48 +124,9 @@ chmod +x run.sh
 
 ------------------------------------------------------------------------
 
-## 🧠 Cómo funciona el POM (IMPORTANTE)
-
-### 🔹 Java
-
-``` xml
-<java.version>21</java.version>
-```
-
-------------------------------------------------------------------------
-
-### 🔹 JavaFX
-
-``` xml
-<javafx.version>21.0.1</javafx.version>
-```
-
-✔ Usa classifier `win` → compilado para Windows
-
-------------------------------------------------------------------------
-
-### 🔹 Fat JAR automático
-
-``` xml
-<descriptorRef>jar-with-dependencies</descriptorRef>
-```
-
-✔ Incluye TODO dentro del JAR\
-✔ No necesitas classpath manual
-
-------------------------------------------------------------------------
-
-### 🔹 Clase principal
-
-``` xml
-<mainClass>main.App</mainClass>
-```
-
-------------------------------------------------------------------------
-
 ## 🔐 Seguridad
 
-NO subir nunca:
+No subir:
 
     git_auth.json
     git.config.json
@@ -185,12 +143,11 @@ git push origin v1.0.0
 
 ------------------------------------------------------------------------
 
-## 📌 Notas importantes
+## 📌 Notas
 
--   JavaFX debe coincidir con la versión del POM
--   El JAR ya es ejecutable (fat jar)
--   Windows usa `javaw` (sin consola)
--   Linux/Mac usa `java`
+-   Usar siempre Java 21
+-   JavaFX debe coincidir con la versión instalada
+-   El JAR generado es ejecutable directamente
 
 ------------------------------------------------------------------------
 
