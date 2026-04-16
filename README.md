@@ -38,9 +38,6 @@ https://drive.google.com/drive/folders/1337WeN_O6zhZiIpocrbkbaEX32mn4xW5?usp=dri
     │       ├── javafx.fxml.jar
     │       └── ...
 
-✔ La carpeta **lib** es obligatoria\
-✔ Dentro deben estar TODOS los `.jar` de JavaFX
-
 ------------------------------------------------------------------------
 
 ## 🧵 Importar en NetBeans
@@ -113,20 +110,12 @@ exit
 run.bat
 ```
 
-✔ No se abre consola (usa `javaw`)\
-✔ Lanza directamente la aplicación
-
 ------------------------------------------------------------------------
 
 ### 🐧 Linux / 🍏 macOS (.sh)
 
 ``` bash
 #!/bin/bash
-
-echo "==============================="
-echo "  Iniciando Deploy Tools..."
-echo "==============================="
-echo ""
 
 JAVA_HOME=/usr/lib/jvm/jdk-24
 JAVAFX_PATH=/opt/javafx-sdk-24.0.2/lib
@@ -137,45 +126,72 @@ $JAVA_HOME/bin/java \
   -jar deploy-tools.jar
 ```
 
-### Permisos
-
 ``` bash
 chmod +x run.sh
-```
-
-### Ejecutar
-
-``` bash
 ./run.sh
 ```
 
 ------------------------------------------------------------------------
 
-## 📌 Cómo colocar correctamente JavaFX
+## 📌 Cómo instalar JavaFX correctamente (PASO A PASO)
 
-1.  Descargar JavaFX\
-2.  Extraer carpeta:
+### 1️⃣ Descargar JavaFX
 
-```{=html}
-<!-- -->
-```
+Descarga JavaFX desde la web oficial o desde el Google Drive
+proporcionado.
+
+------------------------------------------------------------------------
+
+### 2️⃣ Extraer el archivo
+
+El archivo descargado será un `.zip`, por ejemplo:
+
+    openjfx-24.0.2_windows-x64_bin.zip
+
+👉 Haz clic derecho → **Extraer aquí** o **Extract All**
+
+Esto generará una carpeta llamada:
+
     javafx-sdk-24.0.2
 
-3.  Copiar en:
+------------------------------------------------------------------------
 
-```{=html}
-<!-- -->
-```
+### 3️⃣ Mover la carpeta a Java
+
+Copia esa carpeta completa a:
+
     C:\Program Files\Java\
 
-4.  Verificar:
+Debe quedar así:
 
-```{=html}
-<!-- -->
-```
+    C:\Program Files\Java\javafx-sdk-24.0.2
+
+------------------------------------------------------------------------
+
+### 4️⃣ Verificar la instalación (MUY IMPORTANTE)
+
+Entra dentro de la carpeta:
+
     C:\Program Files\Java\javafx-sdk-24.0.2\lib
 
-✔ Dentro deben estar los `.jar`
+✔ Dentro deben existir archivos como:
+
+-   javafx.base.jar\
+-   javafx.controls.jar\
+-   javafx.fxml.jar
+
+Si no ves estos archivos → JavaFX está mal instalado
+
+------------------------------------------------------------------------
+
+### 5️⃣ Resumen rápido
+
+✔ Carpeta correcta:
+
+    C:\Program Files\Java\javafx-sdk-24.0.2\lib
+
+✔ Dentro hay `.jar` → OK\
+❌ Si no hay `.jar` → error de instalación
 
 ------------------------------------------------------------------------
 
