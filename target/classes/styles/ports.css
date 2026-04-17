@@ -1,0 +1,123 @@
+.root {
+    -fx-background-color: #f6f8fa;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* ------------------------------------------------
+   TITULO
+------------------------------------------------ */
+
+.title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2937;
+}
+
+/* ------------------------------------------------
+   LABELS
+------------------------------------------------ */
+
+.label {
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+}
+
+/* ------------------------------------------------
+   COMBOBOX
+------------------------------------------------ */
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 4 6 4 6;
+}
+
+.combo-box:hover {
+    -fx-border-color: #3b82f6;
+}
+
+/* ------------------------------------------------
+   LISTVIEW
+------------------------------------------------ */
+
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.list-cell {
+    -fx-padding: 6 10 6 10;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #e0ecff;
+    -fx-text-fill: #1d4ed8;
+}
+
+/* ------------------------------------------------
+   BOTONES GENERALES
+------------------------------------------------ */
+
+.button {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #111827;
+    -fx-background-radius: 6;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #d1d5db;
+}
+
+/* ------------------------------------------------
+   BOTON ESCANEAR
+------------------------------------------------ */
+
+#scanButton {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+#scanButton:hover {
+    -fx-background-color: #2563eb;
+}
+
+/* ------------------------------------------------
+   BOTON LIBERAR
+------------------------------------------------ */
+
+#freePortsButton {
+    -fx-background-color: #f97316;
+    -fx-text-fill: white;
+}
+
+#freePortsButton:hover {
+    -fx-background-color: #ea580c;
+}
+
+/* ------------------------------------------------
+   BOTON CERRAR
+------------------------------------------------ */
+
+#closeButton {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+}
+
+#closeButton:hover {
+    -fx-background-color: #dc2626;
+}
+
+/* ------------------------------------------------
+   STATUS
+------------------------------------------------ */
+
+.status {
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+}

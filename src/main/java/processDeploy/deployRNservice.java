@@ -19,11 +19,9 @@ public class deployRNservice {
 
     private static final Map<String, Boolean> RUNNING = new ConcurrentHashMap<>();
 
-    /*
-    ============================================
-    DETECTAR TIPO PROYECTO
-    ============================================
-     */
+    // =========================
+    // DETECTAR TIPO
+    // =========================
     public static RNType detectType(String path, Consumer<String> log) {
 
         try {
@@ -55,10 +53,9 @@ public class deployRNservice {
             }
 
         } catch (Exception e) {
-            log.accept("Error detectando el tipo de proyecto: " + safe(e));
+            log.accept("Error detectando tipo: " + safe(e));
         }
 
-        log.accept("No se pudo identificar el tipo de proyecto");
         return RNType.UNKNOWN;
     }
 
@@ -76,33 +73,28 @@ public class deployRNservice {
         return obj != null && obj.has(name);
     }
 
-    /*
-    ============================================
-    METRO
-    ============================================
-     */
+    // =========================
+    // METRO
+    // =========================
     public static void startMetro(String key, String path, Consumer<String> log) {
-
-        if (isRunning(key)) {
-            log.accept("Metro ya está en ejecución");
-            return;
-        }
 
         File dir = validateDir(path, log);
         if (dir == null) return;
 
         RNType type = detectType(path, log);
 
-        String command = switch (type) {
-            case EXPO -> "npx expo start";
-            case CLI -> "npx react-native start";
-            default -> null;
-        };
-
-        if (command == null) {
-            log.accept("No se pudo iniciar Metro (tipo desconocido)");
+        // 🔥 EXPO NO USA METRO MANUAL
+        if (type == RNType.EXPO) {
+            log.accept("Expo gestiona Metro automáticamente");
             return;
         }
+
+        if (isRunning(key)) {
+            log.accept("Metro ya está en ejecución");
+            return;
+        }
+
+        String command = "npx react-native start";
 
         if (runExternalTerminal(dir, command, log)) {
             RUNNING.put(key, true);
@@ -116,32 +108,35 @@ public class deployRNservice {
         log.accept("Metro detenido");
     }
 
-    /*
-    ============================================
-    ANDROID
-    ============================================
-     */
+    // =========================
+    // ANDROID
+    // =========================
     public static void startAndroid(String key, String path, Consumer<String> log) {
-
-        if (isRunning(key)) {
-            log.accept("Android ya está en ejecución");
-            return;
-        }
 
         File dir = validateDir(path, log);
         if (dir == null) return;
 
         RNType type = detectType(path, log);
 
-        String command = switch (type) {
-            case EXPO -> "npx expo run:android";
-            case CLI -> "npx react-native run-android";
-            default -> null;
-        };
-
-        if (command == null) {
-            log.accept("No se pudo ejecutar Android (tipo desconocido)");
+        if (isRunning(key)) {
+            log.accept("Android ya está en ejecución");
             return;
+        }
+
+        String command;
+
+        switch (type) {
+            case EXPO -> {
+                // 🔥 SOLO ESTE (incluye metro)
+                command = "npx expo start --android";
+            }
+            case CLI -> {
+                command = "npx react-native run-android";
+            }
+            default -> {
+                log.accept("Tipo de proyecto desconocido");
+                return;
+            }
         }
 
         if (runExternalTerminal(dir, command, log)) {
@@ -156,11 +151,9 @@ public class deployRNservice {
         log.accept("Android detenido");
     }
 
-    /*
-    ============================================
-    BUILD APK
-    ============================================
-     */
+    // =========================
+    // BUILD APK
+    // =========================
     public static void buildAPK(String path, Consumer<String> log) {
 
         File root = validateDir(path, log);
@@ -169,53 +162,42 @@ public class deployRNservice {
         File androidDir = new File(root, "android");
 
         if (!androidDir.exists()) {
-            log.accept("No se encontró la carpeta android");
+            log.accept("No existe carpeta android (Expo no soporta build aquí)");
             return;
         }
 
         log.accept("Ejecutando build APK...");
 
         if (runGradle(androidDir, log)) {
-            log.accept("Build lanzado en terminal externa");
+            log.accept("Build lanzado");
         }
     }
 
     public static void stopBuild(Consumer<String> log) {
-
         killWindowsProcesses(new String[]{"gradle.exe", "java.exe"}, log);
         log.accept("Build detenido");
     }
 
-    /*
-    ============================================
-    CORE KILL
-    ============================================
-     */
+    // =========================
+    // KILL
+    // =========================
     private static void killWindowsProcesses(String[] names, Consumer<String> log) {
 
         try {
 
             String os = System.getProperty("os.name").toLowerCase();
 
-            if (os.contains("win")) {
+            for (String name : names) {
 
-                for (String name : names) {
-
+                if (os.contains("win")) {
                     new ProcessBuilder("cmd.exe", "/c", "taskkill /F /IM " + name)
                             .start().waitFor();
-
-                    log.accept("Proceso eliminado: " + name);
-                }
-
-            } else {
-
-                for (String name : names) {
-
+                } else {
                     new ProcessBuilder("bash", "-c", "pkill -f " + name)
                             .start().waitFor();
-
-                    log.accept("Proceso eliminado: " + name);
                 }
+
+                log.accept("Proceso eliminado: " + name);
             }
 
         } catch (Exception e) {
@@ -223,11 +205,9 @@ public class deployRNservice {
         }
     }
 
-    /*
-    ============================================
-    VALIDACIONES
-    ============================================
-     */
+    // =========================
+    // VALIDACIÓN
+    // =========================
     private static File validateDir(String path, Consumer<String> log) {
 
         if (path == null || path.isBlank()) {
@@ -245,11 +225,9 @@ public class deployRNservice {
         return dir;
     }
 
-    /*
-    ============================================
-    TERMINAL
-    ============================================
-     */
+    // =========================
+    // TERMINAL
+    // =========================
     private static boolean runExternalTerminal(File dir, String command, Consumer<String> log) {
 
         try {
@@ -279,7 +257,7 @@ public class deployRNservice {
             return true;
 
         } catch (Exception e) {
-            log.accept("No se pudo abrir terminal: " + safe(e));
+            log.accept("Error terminal: " + safe(e));
             return false;
         }
     }
@@ -318,11 +296,6 @@ public class deployRNservice {
         }
     }
 
-    /*
-    ============================================
-    UTIL
-    ============================================
-     */
     private static String safe(Exception e) {
         return e.getMessage() != null ? e.getMessage() : "Error desconocido";
     }

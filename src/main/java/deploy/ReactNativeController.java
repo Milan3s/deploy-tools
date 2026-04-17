@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
@@ -42,16 +43,27 @@ public class ReactNativeController implements Initializable {
     @FXML private Button unlockButton;
     @FXML private Button buildAPKButton;
 
-    private String projectPath;
+    // 🔥 BLOQUES UI
+    @FXML private AnchorPane metroBlock;
+    @FXML private AnchorPane androidBlock;
 
+    @FXML private Label androidTitle;
+
+    @FXML private ImageView metroIcon;
+    @FXML private ImageView androidIcon;
+
+    private String projectPath;
+    private RNType currentType = RNType.UNKNOWN;
+
+    // =========================
+    // INIT
+    // =========================
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         Platform.runLater(() -> {
             Stage stage = (Stage) root.getScene().getWindow();
-            if (stage != null) {
-                stage.setResizable(false);
-            }
+            if (stage != null) stage.setResizable(false);
         });
 
         initCombo();
@@ -65,16 +77,20 @@ public class ReactNativeController implements Initializable {
     }
 
     private void loadConfig() {
+
         try {
+
             String path = configService.getProjectsPath();
 
             if (path != null && !path.isBlank()) {
+
                 projectPath = path;
                 projectPathField.setText(path);
                 projectPathField.setDisable(true);
 
                 detectType();
                 setStatus("Configurado correctamente");
+
             } else {
                 setStatus("Sin configurar");
             }
@@ -85,13 +101,70 @@ public class ReactNativeController implements Initializable {
         }
     }
 
+    // =========================
+    // DETECT TYPE
+    // =========================
     private void detectType() {
+
         if (projectPath == null) return;
 
-        RNType type = deployRNservice.detectType(projectPath, this::log);
-        Platform.runLater(() -> projectTypeCombo.setValue(type.name()));
+        currentType = deployRNservice.detectType(projectPath, this::log);
+
+        Platform.runLater(() -> {
+            projectTypeCombo.setValue(currentType.name());
+            applyTypeUI();
+        });
     }
 
+    // =========================
+    // UI SEGÚN TIPO (CLAVE)
+    // =========================
+    private void applyTypeUI() {
+
+        if (currentType == RNType.EXPO) {
+
+            // 🔥 OCULTAR METRO
+            metroBlock.setVisible(false);
+            metroBlock.setManaged(false);
+
+            // 🔥 MOVER ANDROID
+            androidBlock.setLayoutX(40);
+
+            // 🔥 CAMBIAR TÍTULO
+            androidTitle.setText("ANDROID + METRO");
+
+            // 🔥 DESACTIVAR BOTONES METRO
+            startMetroBtn.setDisable(true);
+            stopMetroBtn.setDisable(true);
+
+            metroStatus.setText("AUTO");
+
+            log("Modo EXPO → Metro integrado con Android");
+
+        } else {
+
+            // 🔥 MOSTRAR METRO
+            metroBlock.setVisible(true);
+            metroBlock.setManaged(true);
+
+            // 🔥 POSICIÓN ORIGINAL
+            androidBlock.setLayoutX(351);
+
+            // 🔥 RESTAURAR
+            androidTitle.setText("ANDROID");
+
+            startMetroBtn.setDisable(false);
+            stopMetroBtn.setDisable(true);
+
+            metroStatus.setText("DETENIDO");
+
+            log("Modo CLI → Metro separado");
+        }
+    }
+
+    // =========================
+    // BROWSE
+    // =========================
     @FXML
     private void onBrowse(ActionEvent event) {
 
@@ -107,6 +180,9 @@ public class ReactNativeController implements Initializable {
         setStatus("Ruta seleccionada");
     }
 
+    // =========================
+    // SAVE
+    // =========================
     @FXML
     private void onSave(ActionEvent event) {
 
@@ -119,13 +195,17 @@ public class ReactNativeController implements Initializable {
         }
 
         try {
+
             boolean ok = configService.setProjectsPath(path);
 
             if (ok) {
+
                 projectPath = path;
                 projectPathField.setDisable(true);
+
                 detectType();
                 setStatus("Ruta guardada correctamente");
+
             } else {
                 setStatus("No se pudo guardar");
             }
@@ -142,47 +222,75 @@ public class ReactNativeController implements Initializable {
         setStatus("Campo editable");
     }
 
+    // =========================
+    // METRO
+    // =========================
     @FXML
     private void onStartMetro(ActionEvent event) {
+
+        if (currentType == RNType.EXPO) {
+            log("Expo usa Metro automáticamente");
+            return;
+        }
 
         if (!validateProject()) return;
 
         log("[METRO] Iniciando...");
         deployRNservice.startMetro("metro", projectPath, this::log);
-        refreshState();
+
+        setMetroStatus(true);
     }
 
     @FXML
     private void onStopMetro(ActionEvent event) {
-        log("[METRO] Deteniendo procesos...");
+
+        if (currentType == RNType.EXPO) return;
+
+        log("[METRO] Deteniendo...");
         deployRNservice.stopMetro("metro", this::log);
-        refreshState();
+
+        setMetroStatus(false);
     }
 
+    // =========================
+    // ANDROID
+    // =========================
     @FXML
     private void onStartAndroid(ActionEvent event) {
 
         if (!validateProject()) return;
 
         log("[ANDROID] Iniciando...");
-        deployRNservice.startAndroid("android", projectPath, this::log);
-        refreshState();
+
+        if (currentType == RNType.EXPO) {
+
+            log("Expo → arranca Metro + Android automáticamente");
+            deployRNservice.startAndroid("android", projectPath, this::log);
+
+        } else {
+
+            deployRNservice.startMetro("metro", projectPath, this::log);
+            deployRNservice.startAndroid("android", projectPath, this::log);
+        }
+
+        setAndroidStatus(true);
     }
 
     @FXML
     private void onStopAndroid(ActionEvent event) {
-        log("[ANDROID] Deteniendo procesos...");
+
+        log("[ANDROID] Deteniendo...");
         deployRNservice.stopAndroid("android", this::log);
-        refreshState();
+
+        setAndroidStatus(false);
     }
 
-    /*
-    ============================================
-    OPEN BUILD WINDOW (NO MODAL)
-    ============================================
-    */
+    // =========================
+    // BUILD APK
+    // =========================
     @FXML
     private void onOpenBuildAPK(ActionEvent event) {
+
         try {
 
             FXMLLoader loader = new FXMLLoader(
@@ -194,12 +302,8 @@ public class ReactNativeController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Build Android APK");
 
-            Scene scene = new Scene(pane);
-            stage.setScene(scene);
-
-            // MISMO patrón que DeployGlobalController
+            stage.setScene(new Scene(pane));
             stage.setResizable(false);
-            stage.setMaximized(false);
             stage.sizeToScene();
 
             stage.show();
@@ -208,10 +312,12 @@ public class ReactNativeController implements Initializable {
 
         } catch (Exception e) {
             log("[ERROR] " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
+    // =========================
+    // VALIDACIONES
+    // =========================
     private boolean validateProject() {
 
         projectPath = projectPathField.getText();
@@ -226,11 +332,14 @@ public class ReactNativeController implements Initializable {
     }
 
     private boolean isValidProject(String path) {
-        return path != null
-                && !path.isBlank()
-                && new File(path, "package.json").exists();
+        return path != null &&
+               !path.isBlank() &&
+               new File(path, "package.json").exists();
     }
 
+    // =========================
+    // STATE
+    // =========================
     private void refreshState() {
 
         Platform.runLater(() -> {
@@ -244,6 +353,12 @@ public class ReactNativeController implements Initializable {
     }
 
     private void setMetroStatus(boolean running) {
+
+        if (currentType == RNType.EXPO) {
+            metroStatus.setText("AUTO");
+            return;
+        }
+
         metroStatus.setText(running ? "ACTIVO" : "DETENIDO");
         startMetroBtn.setDisable(running);
         stopMetroBtn.setDisable(!running);
@@ -255,6 +370,9 @@ public class ReactNativeController implements Initializable {
         stopAndroidBtn.setDisable(!running);
     }
 
+    // =========================
+    // UI
+    // =========================
     private void setStatus(String text) {
         statusLabel.setText("Estado: " + text);
     }

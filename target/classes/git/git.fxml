@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root" prefHeight="1108.0" prefWidth="1559.0"
+            stylesheets="@../styles/git.css"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="git.GitController">
+
+    <children>
+
+        <!-- ================= TITULO ================= -->
+        <Label layoutX="40" layoutY="20" styleClass="title-label" text="Git Manager" />
+
+        <!-- ================================================= -->
+        <!-- ================= IZQUIERDA ===================== -->
+        <!-- ================================================= -->
+
+        <!-- CONEXIÓN -->
+        <Label layoutX="40" layoutY="70" styleClass="section-label" text="Conexión GitHub" />
+
+        <TextField fx:id="usernameField" layoutX="40" layoutY="100" prefHeight="40" prefWidth="320" promptText="Usuario" />
+        <PasswordField fx:id="tokenField" layoutX="40" layoutY="150" prefHeight="40" prefWidth="320" promptText="Token" />
+
+        <Button fx:id="connectBtn" layoutX="40" layoutY="200" prefHeight="40" prefWidth="320" text="Conectar" onAction="#onConnect"/>
+
+        <HBox layoutX="40" layoutY="255" spacing="10">
+            <children>
+                <Button fx:id="saveAuthBtn" prefWidth="155" prefHeight="38" text="Guardar" onAction="#onSaveConnection"/>
+                <Button fx:id="unlockConnectionBtn" prefWidth="155" prefHeight="38" text="Desbloquear" onAction="#onUnlockConnection"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="connectionStatusLabel" layoutX="40" layoutY="305" text="Estado: -" />
+
+        <!-- PROYECTO -->
+        <Label layoutX="40" layoutY="350" styleClass="section-label" text="Proyecto local" />
+
+        <Label layoutX="40" layoutY="375" text="Ruta de clonación" />
+
+        <TextField fx:id="localPathField" layoutX="40" layoutY="400" prefHeight="40" prefWidth="320" editable="false" promptText="Ruta proyecto"/>
+
+        <HBox layoutX="40" layoutY="450" spacing="10">
+            <children>
+                <Button fx:id="browseBtn" prefWidth="155" prefHeight="38" text="Explorar" onAction="#onBrowse"/>
+                <Button fx:id="unlockPathBtn" prefWidth="155" prefHeight="38" text="Desbloquear ruta" onAction="#onUnlockPath"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="pathStatusLabel" layoutX="40" layoutY="500" text="Ruta bloqueada" />
+
+        <!-- REPO -->
+        <TextField fx:id="newRepoField" layoutX="40" layoutY="540" prefHeight="40" prefWidth="320" promptText="Nombre nuevo repositorio"/>
+        <Button fx:id="createRepoBtn" layoutX="40" layoutY="590" prefHeight="40" prefWidth="320" text="Crear repositorio" onAction="#onCreateRepo"/>
+
+        <!-- RAMAS -->
+        <Label layoutX="40" layoutY="640" styleClass="section-label" text="Gestión de ramas" />
+
+        <TextField fx:id="newBranchField" layoutX="40" layoutY="670" prefHeight="38" prefWidth="320" promptText="Nueva rama"/>
+
+        <Label layoutX="40" layoutY="720" text="Rama origen (merge)" />
+        <MenuButton fx:id="sourceBranchMenu" layoutX="40" layoutY="745" prefHeight="40" prefWidth="320" text="Seleccionar rama origen"/>
+
+        <Label layoutX="40" layoutY="795" text="Rama destino" />
+        <MenuButton fx:id="branchMenu" layoutX="40" layoutY="820" prefHeight="40" prefWidth="320" text="Seleccionar rama destino"/>
+
+        <HBox layoutX="40" layoutY="880" spacing="10">
+            <children>
+                <Button fx:id="createBranchBtn" prefWidth="100" prefHeight="38" text="Crear" onAction="#onCreateBranch"/>
+                <Button fx:id="deleteBranchBtn" prefWidth="100" prefHeight="38" text="Borrar" onAction="#onDeleteBranch"/>
+                <Button fx:id="mergeBranchBtn" prefWidth="100" prefHeight="38" text="Merge" onAction="#onMergeBranch"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="projectStatusLabel" layoutX="40" layoutY="930" text="Estado: -" />
+
+        <!-- ================================================= -->
+        <!-- ================= CENTRO ======================== -->
+        <!-- ================================================= -->
+
+        <Label layoutX="420" layoutY="70" styleClass="section-label" text="Repositorios" />
+
+        <!-- BUSCADOR -->
+        <TextField fx:id="searchRepoField"
+                   layoutX="420" layoutY="100"
+                   prefHeight="40" prefWidth="400"
+                   promptText="Buscar repositorio"/>
+
+        <ListView fx:id="repoListView"
+                  layoutX="420" layoutY="150"
+                  prefHeight="680" prefWidth="400"/>
+
+        <HBox layoutX="420" layoutY="850" spacing="10">
+            <children>
+                <Button fx:id="connectRepoBtn" prefWidth="130" prefHeight="38" text="Conectar Repo" onAction="#onConnectRepo"/>
+                <Button fx:id="refreshReposBtn" prefWidth="110" prefHeight="38" text="Refresh" onAction="#onLoadRepos"/>
+                <Button fx:id="deleteRepoBtn" prefWidth="110" prefHeight="38" text="Delete" onAction="#onDeleteRepo"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="repoStatusLabel" layoutX="420" layoutY="900" text="Estado: -" />
+
+        <!-- ================================================= -->
+        <!-- ================= DERECHA ======================= -->
+        <!-- ================================================= -->
+
+        <Label layoutX="870" layoutY="70" styleClass="section-label" text="Acciones Git" />
+
+        <Label layoutX="870" layoutY="100" text="Repositorio:" />
+        <Label fx:id="selectedRepoLabel" layoutX="870" layoutY="120" text="-" />
+
+        <HBox layoutX="870" layoutY="160" spacing="10">
+            <children>
+                <MenuButton fx:id="gitActionMenu" prefWidth="220" prefHeight="40" text="Seleccionar acción"/>
+                <Button fx:id="executeGitActionBtn" prefWidth="150" prefHeight="40" text="Ejecutar" onAction="#onExecuteGitAction"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="gitStatusLabel" layoutX="870" layoutY="210" text="Estado: -" />
+
+        <!-- COMMIT -->
+        <TextField fx:id="commitMessageField" layoutX="870" layoutY="240" prefHeight="40" prefWidth="500" promptText="Mensaje commit"/>
+        <Button fx:id="commitBtn" layoutX="870" layoutY="290" prefHeight="40" prefWidth="180" text="Commit" onAction="#onCommit"/>
+
+        <Label fx:id="commitStatusLabel" layoutX="870" layoutY="340" text="Estado: -" />
+
+        <!-- CONSOLA -->
+        <Label layoutX="870" layoutY="370" styleClass="section-label" text="Consola" />
+
+        <HBox layoutX="870" layoutY="400" spacing="10">
+            <children>
+                <Button fx:id="copyLogBtn" prefWidth="130" prefHeight="36" text="Copiar log" onAction="#onCopyLog"/>
+                <Button fx:id="clearLogBtn" prefWidth="130" prefHeight="36" text="Limpiar" onAction="#onClearLog"/>
+            </children>
+        </HBox>
+
+        <TextArea fx:id="logArea"
+                  layoutX="870" layoutY="450"
+                  prefHeight="500" prefWidth="650"
+                  wrapText="true"/>
+
+        <!-- ================================================= -->
+        <!-- ================= FOOTER ========================= -->
+        <!-- ================================================= -->
+
+        <Separator layoutX="30" layoutY="1000" prefWidth="1500"/>
+
+        <Button fx:id="closeBtn"
+                layoutX="670" layoutY="1020"
+                prefHeight="45" prefWidth="220"
+                text="Cerrar"
+                onAction="#onClose"/>
+
+    </children>
+</AnchorPane>

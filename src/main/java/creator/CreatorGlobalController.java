@@ -6,6 +6,7 @@ import configuration.configService;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -24,29 +25,15 @@ import utils_ui.directory;
 
 public class CreatorGlobalController extends creatorGlobal implements Initializable {
 
-    @FXML
-    private AnchorPane creatorRoot;
-
-    @FXML
-    private TextField projectNameField;
-    @FXML
-    private TextField basePathField;
-
-    @FXML
-    private ComboBox<String> frameworkCombo;
-    @FXML
-    private ComboBox<String> versionCombo;
-
-    @FXML
-    private TextArea logArea;
-
-    @FXML
-    private Label configStatusLabel;
-
-    @FXML
-    private Button configButton;
-    @FXML
-    private Button closeBtn;
+    @FXML private AnchorPane creatorRoot;
+    @FXML private TextField projectNameField;
+    @FXML private TextField basePathField;
+    @FXML private ComboBox<String> frameworkCombo;
+    @FXML private ComboBox<String> versionCombo;
+    @FXML private TextArea logArea;
+    @FXML private Label configStatusLabel;
+    @FXML private Button configButton;
+    @FXML private Button closeBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -61,6 +48,92 @@ public class CreatorGlobalController extends creatorGlobal implements Initializa
         initBasePath();
     }
 
+    // =========================
+    // FRAMEWORK SELECT
+    // =========================
+    private void onFrameworkSelected() {
+
+        String fw = frameworkCombo.getValue();
+
+        versionCombo.getItems().clear();
+        versionCombo.setDisable(true);
+
+        if (fw == null) return;
+
+        logUI("Cargando versiones...");
+
+        // 🔥 IMPORTANTE: no usar this::log
+        loadVersions(
+                fw,
+                this::logInternal, // 👈 debug silencioso
+                versions -> Platform.runLater(() -> applyVersions(versions))
+        );
+    }
+
+    // =========================
+    // APPLY VERSIONS
+    // =========================
+    private void applyVersions(List<String> versions) {
+
+        versionCombo.getItems().clear();
+
+        if (versions == null || versions.isEmpty()) {
+            logUI("No se pudieron cargar versiones");
+            versionCombo.setPromptText("Error");
+            return;
+        }
+
+        if (versions.size() == 1 && versions.get(0).equalsIgnoreCase("latest")) {
+            logUI("Error cargando versiones");
+            versionCombo.setPromptText("Error");
+            return;
+        }
+
+        versionCombo.getItems().setAll(versions);
+        versionCombo.getSelectionModel().selectFirst();
+        versionCombo.setDisable(false);
+
+        logUI("Versiones cargadas correctamente");
+    }
+
+    // =========================
+    // RUN COMMAND
+    // =========================
+    @FXML
+    private void onRunCommand(ActionEvent event) {
+
+        String fw = frameworkCombo.getValue();
+        String version = versionCombo.getValue();
+        String name = projectNameField.getText();
+        String path = basePathField.getText();
+
+        if (fw == null) {
+            logUI("Selecciona un framework.");
+            return;
+        }
+
+        if (name == null || name.isBlank()) {
+            logUI("Introduce nombre del proyecto.");
+            return;
+        }
+
+        if (path == null || path.isBlank()) {
+            setStatus("Configura la ruta primero", "ko");
+            return;
+        }
+
+        if (version == null || version.isBlank()) {
+            version = "latest";
+        }
+
+        logUI("Creando proyecto...");
+
+        createProject(fw, version, name, path, this::logUI);
+    }
+
+    // =========================
+    // BASE PATH
+    // =========================
     private void initBasePath() {
 
         String path = configService.getProjectsPath();
@@ -83,92 +156,13 @@ public class CreatorGlobalController extends creatorGlobal implements Initializa
         }
     }
 
-    private void lockConfigButton() {
-        configButton.setDisable(false);
-
-        configButton.getStyleClass().removeAll("button-primary");
-        if (!configButton.getStyleClass().contains("button-create")) {
-            configButton.getStyleClass().add("button-create");
-        }
-    }
-
-    private void unlockConfigButton() {
-
-        configButton.setDisable(false);
-
-        configButton.getStyleClass().remove("button-create");
-        if (!configButton.getStyleClass().contains("button-primary")) {
-            configButton.getStyleClass().add("button-primary");
-        }
-    }
-
-    private void onFrameworkSelected() {
-
-        String fw = frameworkCombo.getValue();
-
-        versionCombo.getItems().clear();
-        versionCombo.setDisable(true);
-
-        if (fw == null) {
-            return;
-        }
-
-        versionCombo.setPromptText("Cargando versiones...");
-
-        loadVersions(
-                fw,
-                this::log,
-                versions -> Platform.runLater(() -> {
-
-                    versionCombo.getItems().setAll(versions);
-
-                    if (!versions.isEmpty()) {
-                        versionCombo.getSelectionModel().selectFirst();
-                        versionCombo.setDisable(false);
-                    } else {
-                        versionCombo.setPromptText("Sin versiones");
-                    }
-                })
-        );
-    }
-
-    @FXML
-    private void onRunCommand(ActionEvent event) {
-
-        String fw = frameworkCombo.getValue();
-        String version = versionCombo.getValue();
-        String name = projectNameField.getText();
-        String path = basePathField.getText();
-
-        if (fw == null) {
-            log("Selecciona un framework.");
-            return;
-        }
-
-        if (name == null || name.isBlank()) {
-            log("Introduce nombre del proyecto.");
-            return;
-        }
-
-        if (path == null || path.isBlank()) {
-            setStatus("Configura la ruta primero", "ko");
-            return;
-        }
-
-        createProject(fw, version, name, path, this::log);
-    }
-
     @FXML
     private void onBrowseBasePath(ActionEvent event) {
 
-        if (basePathField.isDisabled()) {
-            return;
-        }
+        if (basePathField.isDisabled()) return;
 
         File dir = new directory().show();
-        if (dir == null) {
-            return;
-        }
+        if (dir == null) return;
 
         basePathField.setText(dir.getAbsolutePath());
         setStatus("Ruta seleccionada", "info");
@@ -195,6 +189,9 @@ public class CreatorGlobalController extends creatorGlobal implements Initializa
         }
     }
 
+    // =========================
+    // CONFIG WINDOW
+    // =========================
     @FXML
     private void onOpenConfig(ActionEvent event) {
 
@@ -212,9 +209,6 @@ public class CreatorGlobalController extends creatorGlobal implements Initializa
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(creatorRoot.getScene().getWindow());
 
-            // =========================
-            // BLOQUEO GLOBAL DE TAMAÑO
-            // =========================
             stage.setResizable(false);
             stage.setMaximized(false);
             stage.sizeToScene();
@@ -224,8 +218,23 @@ public class CreatorGlobalController extends creatorGlobal implements Initializa
             initBasePath();
 
         } catch (Exception e) {
-            log("Error configuración: " + e.getMessage());
+            logUI("Error configuración: " + e.getMessage());
         }
+    }
+
+    // =========================
+    // UI
+    // =========================
+    private void lockConfigButton() {
+        configButton.setDisable(false);
+        configButton.getStyleClass().removeAll("button-primary");
+        configButton.getStyleClass().add("button-create");
+    }
+
+    private void unlockConfigButton() {
+        configButton.setDisable(false);
+        configButton.getStyleClass().remove("button-create");
+        configButton.getStyleClass().add("button-primary");
     }
 
     private void setStatus(String text, String type) {
@@ -234,17 +243,24 @@ public class CreatorGlobalController extends creatorGlobal implements Initializa
         configStatusLabel.getStyleClass().removeAll("status-ok", "status-ko", "status-info");
 
         switch (type) {
-            case "ok" ->
-                configStatusLabel.getStyleClass().add("status-ok");
-            case "ko" ->
-                configStatusLabel.getStyleClass().add("status-ko");
-            default ->
-                configStatusLabel.getStyleClass().add("status-info");
+            case "ok" -> configStatusLabel.getStyleClass().add("status-ok");
+            case "ko" -> configStatusLabel.getStyleClass().add("status-ko");
+            default -> configStatusLabel.getStyleClass().add("status-info");
         }
     }
 
-    private void log(String msg) {
+    // =========================
+    // LOGS
+    // =========================
+
+    // 👉 SOLO UI
+    private void logUI(String msg) {
         Platform.runLater(() -> logArea.appendText(msg + "\n"));
+    }
+
+    // 👉 DEBUG INTERNO (NO UI)
+    private void logInternal(String msg) {
+        System.out.println("[DEBUG] " + msg);
     }
 
     @FXML
