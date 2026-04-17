@@ -66,7 +66,7 @@
                text="Servicios React Native"/>
 
         <!-- ========================= -->
-        <!-- 🔥 BLOQUE METRO -->
+        <!-- CLI → METRO -->
         <!-- ========================= -->
         <AnchorPane fx:id="metroBlock"
                     layoutX="40" layoutY="430"
@@ -80,8 +80,7 @@
 
                 <ImageView fx:id="metroIcon"
                            layoutX="0" layoutY="40"
-                           fitHeight="29" fitWidth="29"
-                           preserveRatio="true">
+                           fitHeight="29" fitWidth="29">
                     <image>
                         <Image url="@../../devIcons/metro.png"/>
                     </image>
@@ -110,7 +109,7 @@
         </AnchorPane>
 
         <!-- ========================= -->
-        <!-- 🔥 BLOQUE ANDROID -->
+        <!-- CLI → ANDROID -->
         <!-- ========================= -->
         <AnchorPane fx:id="androidBlock"
                     layoutX="351" layoutY="430"
@@ -125,8 +124,7 @@
 
                 <ImageView fx:id="androidIcon"
                            layoutX="0" layoutY="40"
-                           fitHeight="29" fitWidth="29"
-                           preserveRatio="true">
+                           fitHeight="29" fitWidth="29">
                     <image>
                         <Image url="@../../devIcons/android.png"/>
                     </image>
@@ -150,6 +148,55 @@
                        layoutX="0" layoutY="150"
                        styleClass="status status-off"
                        text="DETENIDO"/>
+
+            </children>
+        </AnchorPane>
+
+        <!-- ========================= -->
+        <!-- 🔥 EXPO BLOQUE COMBINADO -->
+        <!-- ========================= -->
+        <AnchorPane fx:id="expoBlock"
+                    layoutX="40" layoutY="430"
+                    prefWidth="571" prefHeight="200"
+                    visible="false"
+                    managed="false">
+
+            <children>
+
+                <Label layoutX="0" layoutY="0"
+                       styleClass="card-title"
+                       text="EXPO (METRO + ANDROID)"/>
+
+                <!-- ICONOS JUNTOS -->
+                <ImageView layoutX="0" layoutY="40"
+                           fitHeight="29" fitWidth="29">
+                    <image>
+                        <Image url="@../../devIcons/metro.png"/>
+                    </image>
+                </ImageView>
+
+                <ImageView layoutX="40" layoutY="40"
+                           fitHeight="29" fitWidth="29">
+                    <image>
+                        <Image url="@../../devIcons/android.png"/>
+                    </image>
+                </ImageView>
+
+                <Button layoutX="0" layoutY="100"
+                        prefWidth="110"
+                        styleClass="button-success"
+                        text="Arrancar"
+                        onAction="#onStartAndroid"/>
+
+                <Button layoutX="120" layoutY="100"
+                        prefWidth="110"
+                        styleClass="button-danger"
+                        text="Parar"
+                        onAction="#onStopAndroid"/>
+
+                <Label layoutX="0" layoutY="150"
+                       styleClass="status status-off"
+                       text="AUTO"/>
 
             </children>
         </AnchorPane>

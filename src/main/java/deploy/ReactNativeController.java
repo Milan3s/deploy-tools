@@ -46,14 +46,16 @@ public class ReactNativeController implements Initializable {
     // 🔥 BLOQUES UI
     @FXML private AnchorPane metroBlock;
     @FXML private AnchorPane androidBlock;
-
-    @FXML private Label androidTitle;
-
-    @FXML private ImageView metroIcon;
-    @FXML private ImageView androidIcon;
+    @FXML private AnchorPane expoBlock;
 
     private String projectPath;
     private RNType currentType = RNType.UNKNOWN;
+    @FXML
+    private ImageView metroIcon;
+    @FXML
+    private Label androidTitle;
+    @FXML
+    private ImageView androidIcon;
 
     // =========================
     // INIT
@@ -117,46 +119,35 @@ public class ReactNativeController implements Initializable {
     }
 
     // =========================
-    // UI SEGÚN TIPO (CLAVE)
+    // UI SEGÚN TIPO (LIMPIO)
     // =========================
     private void applyTypeUI() {
 
         if (currentType == RNType.EXPO) {
 
-            // 🔥 OCULTAR METRO
+            // 🔥 SOLO BLOQUE EXPO
             metroBlock.setVisible(false);
             metroBlock.setManaged(false);
 
-            // 🔥 MOVER ANDROID
-            androidBlock.setLayoutX(40);
+            androidBlock.setVisible(false);
+            androidBlock.setManaged(false);
 
-            // 🔥 CAMBIAR TÍTULO
-            androidTitle.setText("ANDROID + METRO");
+            expoBlock.setVisible(true);
+            expoBlock.setManaged(true);
 
-            // 🔥 DESACTIVAR BOTONES METRO
-            startMetroBtn.setDisable(true);
-            stopMetroBtn.setDisable(true);
-
-            metroStatus.setText("AUTO");
-
-            log("Modo EXPO → Metro integrado con Android");
+            log("Modo EXPO → Metro + Android unificados");
 
         } else {
 
-            // 🔥 MOSTRAR METRO
+            // 🔥 CLI NORMAL
             metroBlock.setVisible(true);
             metroBlock.setManaged(true);
 
-            // 🔥 POSICIÓN ORIGINAL
-            androidBlock.setLayoutX(351);
+            androidBlock.setVisible(true);
+            androidBlock.setManaged(true);
 
-            // 🔥 RESTAURAR
-            androidTitle.setText("ANDROID");
-
-            startMetroBtn.setDisable(false);
-            stopMetroBtn.setDisable(true);
-
-            metroStatus.setText("DETENIDO");
+            expoBlock.setVisible(false);
+            expoBlock.setManaged(false);
 
             log("Modo CLI → Metro separado");
         }
@@ -223,7 +214,7 @@ public class ReactNativeController implements Initializable {
     }
 
     // =========================
-    // METRO
+    // METRO (solo CLI)
     // =========================
     @FXML
     private void onStartMetro(ActionEvent event) {
@@ -264,11 +255,12 @@ public class ReactNativeController implements Initializable {
 
         if (currentType == RNType.EXPO) {
 
-            log("Expo → arranca Metro + Android automáticamente");
+            // 🔥 UN SOLO COMANDO
             deployRNservice.startAndroid("android", projectPath, this::log);
 
         } else {
 
+            // CLI → primero metro
             deployRNservice.startMetro("metro", projectPath, this::log);
             deployRNservice.startAndroid("android", projectPath, this::log);
         }
