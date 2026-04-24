@@ -39,6 +39,24 @@ public class creatorGlobal extends framework {
 
         try {
 
+            String fw = framework.trim().toLowerCase();
+
+            // =========================
+            // REACT → EJECUCIÓN INTERNA
+            // =========================
+            if (fw.equals("react")) {
+
+                console.log("Modo React (controlado)");
+
+                List<String> cmds = buildReactCommands(version, projectName);
+                runInternal(cmds, baseDir, console);
+
+                return;
+            }
+
+            // =========================
+            // RESTO → TERMINAL EXTERNA
+            // =========================
             String command = buildCommand(framework, version, projectName);
 
             if (command.isBlank()) {
@@ -46,8 +64,7 @@ public class creatorGlobal extends framework {
                 return;
             }
 
-            console.log("Ejecutando: " + command);
-
+            console.log("Abriendo terminal externa...");
             runExternalCMD(command, baseDir);
 
         } catch (Exception e) {
@@ -57,7 +74,89 @@ public class creatorGlobal extends framework {
     }
 
     // =========================
-    // BUILD COMMAND
+    // REACT COMMANDS
+    // =========================
+    private static List<String> buildReactCommands(String version, String name) {
+
+        String v = (version == null || version.isBlank()) ? "latest" : version;
+
+        List<String> cmds = new ArrayList<>();
+
+        // 🔥 crear proyecto SIN interacción
+        cmds.add("npm create vite@latest " + name + " -- --template react -y");
+        cmds.add("cd " + name);
+
+        if (!v.equalsIgnoreCase("latest")) {
+
+            // 🔥 instalar deps primero
+            cmds.add("npm install");
+
+            // 🔥 forzar versión exacta
+            cmds.add("npm install react@" + v + " react-dom@" + v + " --save-exact");
+        } else {
+            cmds.add("npm install");
+        }
+
+        return cmds;
+    }
+
+    // =========================
+    // RUN INTERNAL (REACT)
+    // =========================
+    private static void runInternal(List<String> commands, File baseDir, ConsoleCallback console) {
+
+        new Thread(() -> {
+
+            File currentDir = baseDir;
+
+            try {
+
+                for (String cmd : commands) {
+
+                    console.log("> " + cmd);
+
+                    if (cmd.startsWith("cd ")) {
+                        currentDir = new File(currentDir, cmd.substring(3).trim());
+                        continue;
+                    }
+
+                    ProcessBuilder pb = isWindows()
+                            ? new ProcessBuilder("cmd.exe", "/c", cmd)
+                            : new ProcessBuilder("bash", "-c", cmd);
+
+                    pb.directory(currentDir);
+                    pb.redirectErrorStream(true);
+
+                    Process process = pb.start();
+
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(process.getInputStream())
+                    );
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        console.log(line);
+                    }
+
+                    int exit = process.waitFor();
+
+                    if (exit != 0) {
+                        console.log("Error en: " + cmd);
+                        return;
+                    }
+                }
+
+                console.log("✔ React creado correctamente");
+
+            } catch (Exception e) {
+                console.log("Error: " + e.getMessage());
+            }
+
+        }).start();
+    }
+
+    // =========================
+    // BUILD COMMAND (OTROS)
     // =========================
     private static String buildCommand(String framework, String version, String name) {
 
@@ -66,36 +165,29 @@ public class creatorGlobal extends framework {
 
         switch (fw) {
 
-            case "react native cli":
-                if (v.equalsIgnoreCase("latest")) {
-                    return "npx @react-native-community/cli@latest init " + name;
-                }
-                return "npx @react-native-community/cli@latest init " + name + " --version " + v;
-
-            case "react native expo":
-                if (v.equalsIgnoreCase("latest")) {
-                    return "npx create-expo-app " + name;
-                }
-                return "npx create-expo-app " + name
-                        + " --template expo-template-blank@sdk-" + v;
-
-            case "react":
-                return "npm create vite@" + v + " " + name + " -- --template react";
-
             case "vue":
-                return "npm create vue@" + v + " " + name;
+                return "npm create vue@latest " + name + " -- --default";
 
             case "astro":
-                return "npm create astro@" + v + " " + name;
+                return "npm create astro@latest " + name + " -- --template minimal --yes";
 
             case "angular":
-                return "npx @angular/cli@" + v + " new " + name + " --skip-install";
+                return "npx @angular/cli@" + v + " new " + name + " --skip-install --defaults";
 
             case "laravel":
-                if (v.equalsIgnoreCase("latest")) {
-                    return "composer create-project laravel/laravel " + name;
-                }
-                return "composer create-project laravel/laravel " + name + " \"" + v + ".*\"";
+                return v.equalsIgnoreCase("latest")
+                        ? "composer create-project laravel/laravel " + name
+                        : "composer create-project laravel/laravel " + name + " \"" + v + ".*\"";
+
+            case "react native cli":
+                return v.equalsIgnoreCase("latest")
+                        ? "npx @react-native-community/cli@latest init " + name
+                        : "npx @react-native-community/cli@latest init " + name + " --version " + v;
+
+            case "react native expo":
+                return v.equalsIgnoreCase("latest")
+                        ? "npx create-expo-app " + name
+                        : "npx create-expo-app " + name + " --template expo-template-blank@sdk-" + v;
 
             default:
                 return "";
@@ -103,7 +195,49 @@ public class creatorGlobal extends framework {
     }
 
     // =========================
-    // LOAD VERSIONS
+    // TERMINAL EXTERNA
+    // =========================
+    private static void runExternalCMD(String command, File dir) throws Exception {
+
+        if (isWindows()) {
+
+            String full = "cd /d \"" + dir.getAbsolutePath() + "\" && " + command;
+
+            new ProcessBuilder(
+                    "cmd.exe",
+                    "/c",
+                    "start",
+                    "\"\"",
+                    "cmd.exe",
+                    "/k",
+                    full
+            ).start();
+
+        } else {
+
+            String full = "cd \"" + dir.getAbsolutePath() + "\" && " + command + "; exec bash";
+
+            List<String[]> terms = List.of(
+                    new String[]{"gnome-terminal", "--", "bash", "-c", full},
+                    new String[]{"konsole", "-e", "bash", "-c", full},
+                    new String[]{"xfce4-terminal", "-e", "bash -c \"" + full + "\""},
+                    new String[]{"x-terminal-emulator", "-e", "bash -c \"" + full + "\""}
+            );
+
+            for (String[] t : terms) {
+                try {
+                    new ProcessBuilder(t).start();
+                    return;
+                } catch (IOException ignored) {
+                }
+            }
+
+            throw new RuntimeException("No terminal encontrada");
+        }
+    }
+
+    // =========================
+    // LOAD VERSIONS (FIX REAL)
     // =========================
     public static void loadVersions(String framework, ConsoleCallback console, VersionsCallback callback) {
 
@@ -112,12 +246,6 @@ public class creatorGlobal extends framework {
             try {
 
                 String fw = framework.trim().toLowerCase();
-
-                if (fw.equals("laravel")) {
-                    callback.onVersions(loadLaravelVersions());
-                    return;
-                }
-
                 String cmd = buildVersionCommand(fw);
 
                 if (cmd == null) {
@@ -131,38 +259,35 @@ public class creatorGlobal extends framework {
 
                 pb.redirectErrorStream(true);
 
-                Process p = pb.start();
+                Process process = pb.start();
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream())
+                );
+
                 StringBuilder output = new StringBuilder();
-
                 String line;
+
                 while ((line = reader.readLine()) != null) {
                     output.append(line);
                 }
 
-                String raw = output.toString().trim();
+                int exit = process.waitFor();
 
-                console.log("RAW OUTPUT: " + raw);
-
-                int start = raw.indexOf("[");
-                int end = raw.lastIndexOf("]");
-
-                if (start == -1 || end == -1) {
+                if (exit != 0) {
+                    console.log("Error ejecutando npm view");
                     callback.onVersions(List.of("latest"));
                     return;
                 }
 
-                String jsonClean = raw.substring(start, end + 1);
+                JsonArray arr = JsonParser.parseString(output.toString()).getAsJsonArray();
 
-                JsonArray arr = JsonParser.parseString(jsonClean).getAsJsonArray();
+                List<String> versions = parseVersions(arr);
 
-                List<String> result = parseVersions(fw, arr);
-
-                callback.onVersions(result.isEmpty() ? List.of("latest") : result);
+                callback.onVersions(versions.isEmpty() ? List.of("latest") : versions);
 
             } catch (Exception e) {
-                LOGGER.log(Level.WARNING, "Error cargando versiones", e);
+                console.log("Error cargando versiones: " + e.getMessage());
                 callback.onVersions(List.of("latest"));
             }
 
@@ -170,73 +295,27 @@ public class creatorGlobal extends framework {
     }
 
     // =========================
-    // PARSER (FIX REAL)
-    // =========================
-    private static List<String> parseVersions(String framework, JsonArray arr) {
+    private static List<String> parseVersions(JsonArray arr) {
 
         List<String> clean = new ArrayList<>();
 
         for (JsonElement el : arr) {
 
-            String raw = el.getAsString();
+            String v = el.getAsString().replace("v", "");
 
-            // =========================
-            // EXPO → solo SDK (major)
-            // =========================
-            if (framework.equals("react native expo")) {
-
-                if (!raw.matches("^\\d+\\.\\d+\\.\\d+$")) continue;
-
-                String major = raw.split("\\.")[0];
-
-                if (!clean.contains(major)) {
-                    clean.add(major);
-                }
-
+            if (!SEMVER_PATTERN.matcher(v).matches()) {
                 continue;
             }
-
-            // =========================
-            // CLI / NORMAL (SEMVER)
-            // =========================
-            String v = raw.replace("v", "");
-
-            if (!SEMVER_PATTERN.matcher(v).matches()) continue;
-
-            int major = Integer.parseInt(v.split("\\.")[0]);
-            if (major > 100) continue;
 
             clean.add(v);
         }
 
-        // =========================
-        // SORT
-        // =========================
-        if (framework.equals("react native expo")) {
-            clean.sort((a, b) -> Integer.compare(Integer.parseInt(b), Integer.parseInt(a)));
-        } else {
-            clean.sort(semverComparator());
-        }
+        clean.sort(semverComparator());
 
-        // =========================
-        // GROUPING
-        // =========================
         Map<String, String> grouped = new LinkedHashMap<>();
 
         for (String v : clean) {
-
-            String key;
-
-            if (framework.equals("react native cli")) {
-                String[] p = v.split("\\.");
-                key = p[0] + "." + p[1];
-            } else if (framework.equals("react native expo")) {
-                key = v;
-            } else {
-                key = v.split("\\.")[0];
-            }
-
-            grouped.putIfAbsent(key, v);
+            grouped.putIfAbsent(v.split("\\.")[0], v);
         }
 
         List<String> result = new ArrayList<>(grouped.values());
@@ -244,132 +323,35 @@ public class creatorGlobal extends framework {
         return result.size() > 10 ? result.subList(0, 10) : result;
     }
 
-    // =========================
-    // SEMVER SORT
-    // =========================
     private static Comparator<String> semverComparator() {
         return (a, b) -> {
             String[] p1 = a.split("\\.");
             String[] p2 = b.split("\\.");
 
-            int len = Math.max(p1.length, p2.length);
-
-            for (int i = 0; i < len; i++) {
-
+            for (int i = 0; i < Math.max(p1.length, p2.length); i++) {
                 int n1 = i < p1.length ? Integer.parseInt(p1[i]) : 0;
                 int n2 = i < p2.length ? Integer.parseInt(p2[i]) : 0;
-
                 if (n1 != n2) {
                     return Integer.compare(n2, n1);
                 }
             }
-
             return 0;
         };
     }
 
-    // =========================
-    // VERSION COMMANDS
-    // =========================
     private static String buildVersionCommand(String fw) {
 
         switch (fw) {
-
-            case "react native cli":
-                return "npm view react-native versions --json";
-
-            case "react native expo":
-                return "npm view expo-template-blank versions --json";
-
             case "react":
                 return "npm view react versions --json";
-
             case "vue":
                 return "npm view vue versions --json";
-
             case "astro":
                 return "npm view create-astro versions --json";
-
             case "angular":
                 return "npm view @angular/cli versions --json";
-
             default:
                 return null;
-        }
-    }
-
-    // =========================
-    // LARAVEL
-    // =========================
-    private static List<String> loadLaravelVersions() throws Exception {
-
-        ProcessBuilder pb = isWindows()
-                ? new ProcessBuilder("cmd.exe", "/c", "composer show laravel/laravel --all")
-                : new ProcessBuilder("bash", "-c", "composer show laravel/laravel --all");
-
-        pb.redirectErrorStream(true);
-
-        Process p = pb.start();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-        String line;
-        List<String> raw = new ArrayList<>();
-
-        while ((line = reader.readLine()) != null) {
-
-            if (line.trim().startsWith("versions")) {
-
-                line = line.replace("versions :", "").trim();
-                raw.addAll(Arrays.asList(line.split(", ")));
-                break;
-            }
-        }
-
-        List<String> clean = new ArrayList<>();
-
-        for (String v : raw) {
-            if (v.matches("^v\\d+\\.\\d+\\.\\d+$")) {
-                clean.add(v.substring(1));
-            }
-        }
-
-        clean.sort(semverComparator());
-
-        Map<String, String> majors = new LinkedHashMap<>();
-
-        for (String v : clean) {
-            majors.putIfAbsent(v.split("\\.")[0], v);
-        }
-
-        List<String> result = new ArrayList<>(majors.values());
-
-        return result.subList(0, Math.min(10, result.size()));
-    }
-
-    // =========================
-    // UTIL
-    // =========================
-    private static void runExternalCMD(String command, File dir) throws Exception {
-
-        if (isWindows()) {
-
-            new ProcessBuilder(
-                    "cmd.exe",
-                    "/c",
-                    "start",
-                    "cmd.exe",
-                    "/k",
-                    "cd /d \"" + dir.getAbsolutePath() + "\" && " + command
-            ).start();
-
-        } else {
-
-            new ProcessBuilder(
-                    "x-terminal-emulator",
-                    "-e",
-                    "bash -c 'cd \"" + dir.getAbsolutePath() + "\" && " + command + "; exec bash'"
-            ).start();
         }
     }
 
@@ -378,10 +360,12 @@ public class creatorGlobal extends framework {
     }
 
     public interface ConsoleCallback {
+
         void log(String msg);
     }
 
     public interface VersionsCallback {
+
         void onVersions(List<String> versions);
     }
 }

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane prefHeight="733.0" prefWidth="968.0"
+           stylesheets="@../styles/dashboard.css"
+           xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="controller.DashboardController">
+
+    <!-- CONTENEDOR CENTRAL -->
+    <AnchorPane fx:id="dashboardRoot"
+                prefWidth="900" prefHeight="650"
+                maxWidth="900">
+
+        <!-- HEADER -->
+        <Label layoutY="80"
+               prefWidth="900"
+               alignment="CENTER"
+               text="Panel de Control - Deploy Tools"
+               styleClass="dashboard-title"/>
+
+        <Separator layoutY="120" prefWidth="900"/>
+
+        <Label layoutY="135"
+               prefWidth="900"
+               alignment="CENTER"
+               wrapText="true"
+               text="Gestiona proyectos, despliegues, repositorios y configuración del sistema desde un único panel."
+               styleClass="dashboard-description"/>
+
+        <!-- GRID -->
+        <GridPane layoutY="200"
+                  prefWidth="900"
+                  alignment="CENTER"
+                  hgap="40"
+                  vgap="30">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="33.33" halignment="CENTER"/>
+                <ColumnConstraints percentWidth="33.33" halignment="CENTER"/>
+                <ColumnConstraints percentWidth="33.33" halignment="CENTER"/>
+            </columnConstraints>
+
+            <!-- CARD 1 -->
+            <Button fx:id="creatorButton"
+                    onAction="#openCreator"
+                    styleClass="dashboard-card"
+                    maxWidth="Infinity">
+
+                <graphic>
+                    <GridPane alignment="CENTER" vgap="8" maxWidth="Infinity">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="100" halignment="CENTER"/>
+                        </columnConstraints>
+
+                        <ImageView styleClass="card-icon" GridPane.halignment="CENTER">
+                            <image><Image url="@../icons/projects.png"/></image>
+                        </ImageView>
+
+                        <Label text="Crear Proyectos"
+                               styleClass="card-title"
+                               GridPane.rowIndex="1"
+                               GridPane.halignment="CENTER"/>
+
+                        <Label text="Genera un nuevo proyecto"
+                               styleClass="card-desc"
+                               GridPane.rowIndex="2"
+                               GridPane.halignment="CENTER"/>
+                    </GridPane>
+                </graphic>
+            </Button>
+
+            <!-- CARD 2 -->
+            <Button fx:id="deployButton"
+                    onAction="#openDeploy"
+                    styleClass="dashboard-card"
+                    GridPane.columnIndex="1"
+                    maxWidth="Infinity">
+
+                <graphic>
+                    <GridPane alignment="CENTER" vgap="8" maxWidth="Infinity">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="100" halignment="CENTER"/>
+                        </columnConstraints>
+
+                        <ImageView styleClass="card-icon" GridPane.halignment="CENTER">
+                            <image><Image url="@../icons/program.png"/></image>
+                        </ImageView>
+
+                        <Label text="Desplegar Proyectos"
+                               styleClass="card-title"
+                               GridPane.rowIndex="1"
+                               GridPane.halignment="CENTER"/>
+
+                        <Label text="Publicar aplicación"
+                               styleClass="card-desc"
+                               GridPane.rowIndex="2"
+                               GridPane.halignment="CENTER"/>
+                    </GridPane>
+                </graphic>
+            </Button>
+
+            <!-- CARD 3 -->
+            <Button fx:id="npmInstallButton"
+                    onAction="#openNpmInstall"
+                    styleClass="dashboard-card"
+                    GridPane.columnIndex="2"
+                    maxWidth="Infinity">
+
+                <graphic>
+                    <GridPane alignment="CENTER" vgap="8" maxWidth="Infinity">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="100" halignment="CENTER"/>
+                        </columnConstraints>
+
+                        <ImageView styleClass="card-icon" GridPane.halignment="CENTER">
+                            <image><Image url="@../icons/code.png"/></image>
+                        </ImageView>
+
+                        <Label text="Instalar Dependencias"
+                               styleClass="card-title"
+                               GridPane.rowIndex="1"
+                               GridPane.halignment="CENTER"/>
+
+                        <Label text="npm / yarn / pnpm"
+                               styleClass="card-desc"
+                               GridPane.rowIndex="2"
+                               GridPane.halignment="CENTER"/>
+                    </GridPane>
+                </graphic>
+            </Button>
+
+            <!-- FILA 2 -->
+            <Button fx:id="gitButton"
+                    onAction="#openGit"
+                    styleClass="dashboard-card"
+                    GridPane.rowIndex="1"
+                    maxWidth="Infinity">
+
+                <graphic>
+                    <GridPane alignment="CENTER" vgap="8" maxWidth="Infinity">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="100" halignment="CENTER"/>
+                        </columnConstraints>
+
+                        <ImageView styleClass="card-icon" GridPane.halignment="CENTER">
+                            <image><Image url="@../icons/github.png"/></image>
+                        </ImageView>
+
+                        <Label text="Repositorios Git"
+                               styleClass="card-title"
+                               GridPane.rowIndex="1"
+                               GridPane.halignment="CENTER"/>
+
+                        <Label text="Gestionar repositorios"
+                               styleClass="card-desc"
+                               GridPane.rowIndex="2"
+                               GridPane.halignment="CENTER"/>
+                    </GridPane>
+                </graphic>
+            </Button>
+
+            <Button fx:id="portsButton"
+                    onAction="#openPorts"
+                    styleClass="dashboard-card"
+                    GridPane.columnIndex="1"
+                    GridPane.rowIndex="1"
+                    maxWidth="Infinity">
+
+                <graphic>
+                    <GridPane alignment="CENTER" vgap="8" maxWidth="Infinity">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="100" halignment="CENTER"/>
+                        </columnConstraints>
+
+                        <ImageView styleClass="card-icon" GridPane.halignment="CENTER">
+                            <image><Image url="@../icons/ports.png"/></image>
+                        </ImageView>
+
+                        <Label text="Puertos"
+                               styleClass="card-title"
+                               GridPane.rowIndex="1"
+                               GridPane.halignment="CENTER"/>
+
+                        <Label text="Control de puertos"
+                               styleClass="card-desc"
+                               GridPane.rowIndex="2"
+                               GridPane.halignment="CENTER"/>
+                    </GridPane>
+                </graphic>
+            </Button>
+
+            <Button fx:id="settingsButton"
+                    onAction="#openSettings"
+                    styleClass="dashboard-card"
+                    GridPane.columnIndex="2"
+                    GridPane.rowIndex="1"
+                    maxWidth="Infinity">
+
+                <graphic>
+                    <GridPane alignment="CENTER" vgap="8" maxWidth="Infinity">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="100" halignment="CENTER"/>
+                        </columnConstraints>
+
+                        <ImageView styleClass="card-icon" GridPane.halignment="CENTER">
+                            <image><Image url="@../icons/settings.png"/></image>
+                        </ImageView>
+
+                        <Label text="Ajustes"
+                               styleClass="card-title"
+                               GridPane.rowIndex="1"
+                               GridPane.halignment="CENTER"/>
+
+                        <Label text="Configuración"
+                               styleClass="card-desc"
+                               GridPane.rowIndex="2"
+                               GridPane.halignment="CENTER"/>
+                    </GridPane>
+                </graphic>
+            </Button>
+
+        </GridPane>
+
+        <!-- FOOTER -->
+        <Separator layoutY="560" prefWidth="900"/>
+
+        <Button fx:id="closeButton"
+                layoutY="600"
+                AnchorPane.leftAnchor="350"
+                prefWidth="200" prefHeight="45"
+                onAction="#closeApp"
+                text="Cerrar"
+                styleClass="dashboard-close-card"/>
+
+    </AnchorPane>
+
+</StackPane>

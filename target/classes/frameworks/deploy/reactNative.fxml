@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" prefHeight="920.0" prefWidth="1400.0" stylesheets="@../../styles/reactnative.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="deploy.ReactNativeController">
+
+    <children>
+
+        <!-- IZQUIERDA -->
+        <VBox layoutX="40" layoutY="30" spacing="15">
+
+            <Label styleClass="title-label" text="React Native Deploy" />
+
+            <Label styleClass="section-label" text="Ruta del proyecto" />
+
+            <TextField fx:id="projectPathField" prefHeight="45" prefWidth="535" styleClass="input" />
+
+            <HBox spacing="10">
+                <Button fx:id="saveButton" onAction="#onSave" prefWidth="130" styleClass="button-save" text="Guardar" />
+
+                <Button fx:id="unlockButton" onAction="#onUnlock" prefWidth="150" styleClass="button-unlock" text="Desbloquear" />
+
+                <Button fx:id="browseButton" onAction="#onBrowse" prefWidth="230" styleClass="button-primary" text="Buscar ruta" />
+            </HBox>
+
+            <Label fx:id="statusLabel" styleClass="status-label" text="Estado: -" />
+
+            <Label styleClass="section-label" text="Tipo de proyecto" />
+
+            <ComboBox fx:id="projectTypeCombo" prefHeight="45" prefWidth="535" />
+
+            <Label styleClass="section-label" text="Servicios React Native" />
+
+            <!-- CONTENEDOR -->
+            <VBox fx:id="servicesContainer" spacing="20">
+
+                <!-- CLI -->
+                <HBox fx:id="cliContainer" spacing="40">
+
+                    <!-- METRO -->
+                    <AnchorPane prefHeight="200" prefWidth="260">
+
+                        <children>
+
+                            <Label layoutX="0" layoutY="0" styleClass="card-title" text="METRO" />
+
+                            <ImageView fx:id="metroIcon" fitHeight="29" fitWidth="29" layoutX="0" layoutY="40">
+                                <image>
+                                    <Image url="@../../devIcons/metro.png" />
+                                </image>
+                            </ImageView>
+
+                            <Button fx:id="startMetroBtn" layoutX="0" layoutY="100" onAction="#onStartMetro" prefWidth="110" styleClass="button-success" text="Arrancar" />
+
+                            <Button fx:id="stopMetroBtn" layoutX="120" layoutY="100" onAction="#onStopMetro" prefWidth="110" styleClass="button-danger" text="Parar" />
+
+                            <Label fx:id="metroStatus" layoutX="0" layoutY="150" styleClass="status status-off" text="DETENIDO" />
+
+                        </children>
+                    </AnchorPane>
+
+                    <!-- ANDROID -->
+                    <AnchorPane prefHeight="200" prefWidth="260">
+
+                        <children>
+
+                            <Label layoutX="0" layoutY="0" styleClass="card-title" text="ANDROID" />
+
+                            <ImageView fx:id="androidIcon" fitHeight="29" fitWidth="29" layoutX="0" layoutY="40">
+                                <image>
+                                    <Image url="@../../devIcons/android.png" />
+                                </image>
+                            </ImageView>
+
+                            <Button fx:id="startAndroidBtn" layoutX="0" layoutY="100" onAction="#onStartAndroid" prefWidth="110" styleClass="button-success" text="Arrancar" />
+
+                            <Button fx:id="stopAndroidBtn" layoutX="120" layoutY="100" onAction="#onStopAndroid" prefWidth="110" styleClass="button-danger" text="Parar" />
+
+                            <Label fx:id="androidStatus" layoutX="0" layoutY="150" styleClass="status status-off" text="DETENIDO" />
+
+                        </children>
+                    </AnchorPane>
+
+                </HBox>
+
+                <!-- EXPO -->
+                <AnchorPane fx:id="expoBlock" managed="false" prefHeight="200" prefWidth="571" styleClass="" visible="false">
+
+                    <children>
+
+                        <Label layoutX="0" layoutY="0" styleClass="card-title" text="EXPO (METRO + ANDROID)" />
+
+                        <ImageView fitHeight="29" fitWidth="29" layoutX="0" layoutY="40">
+                            <image>
+                                <Image url="@../../devIcons/metro.png" />
+                            </image>
+                        </ImageView>
+
+                        <ImageView fitHeight="29" fitWidth="29" layoutX="40" layoutY="40">
+                            <image>
+                                <Image url="@../../devIcons/android.png" />
+                            </image>
+                        </ImageView>
+
+                        <Button layoutX="0" layoutY="100" onAction="#onStartAndroid" prefWidth="110" styleClass="button-success" text="Arrancar" />
+
+                        <Button layoutX="120" layoutY="100" onAction="#onStopAndroid" prefWidth="110" styleClass="button-danger" text="Parar" />
+
+                        <Label layoutX="0" layoutY="150" styleClass="status status-off" text="AUTO" />
+
+                    </children>
+                </AnchorPane>
+
+            </VBox>
+
+            <Label styleClass="section-label" text="Construye la aplicacion desde aquí" />
+
+            <Button fx:id="buildAPKButton" onAction="#onOpenBuildAPK" prefHeight="45" prefWidth="250" styleClass="button-primary" text="Opciones Avanzadas" />
+
+        </VBox>
+
+        <!-- LOG -->
+        <VBox layoutX="650" layoutY="70" spacing="15">
+
+            <Label styleClass="title-log" text="Log de ejecución" />
+
+            <HBox spacing="10">
+                <Button onAction="#onCopyLog" prefWidth="120" styleClass="button-primary" text="Copiar" />
+
+                <Button onAction="#onClearLog" prefWidth="120" styleClass="button-secondary" text="Limpiar" />
+            </HBox>
+
+            <TextArea fx:id="logArea" editable="false" prefHeight="600" prefWidth="700" styleClass="console" wrapText="true" />
+        </VBox>
+
+        <Separator layoutX="40" layoutY="830" prefWidth="1320" />
+
+        <Button layoutX="620" layoutY="850" onAction="#onClose" prefHeight="45" prefWidth="160" styleClass="button-danger" text="Cerrar" />
+
+    </children>
+</AnchorPane>
